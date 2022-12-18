@@ -1,0 +1,64 @@
+server:
+  port: 8080
+
+# Postgres Connection
+# Custom Configuration
+my-host: 127.0.0.1
+my-port: 5432
+my-database: db
+my-username: un
+my-password: pw
+
+
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    username: ${my-username}
+    password: ${my-password}
+    url: jdbc:postgresql://${my-host}:${my-port}/${my-database}
+
+
+#  sql:
+#    init:
+#      schema-locations: classpath:schema.sql
+#      data-locations: classpath:data.sql
+#      username: ${my-username}
+#      password: ${my-password}
+#      encoding: UTF-8
+#      mode: always
+  jpa:
+    database: postgresql
+    show-sql: true
+    generate-ddl: true
+    hibernate:
+      ddl-auto: create
+
+
+
+  jackson:
+    # 日期序列化格式
+    date-format: yyyy-MM-dd HH:mm:ss
+    # 序列化和反序列化属性配置，默认是保留字段名称，并从方法中删除 set/get/is 前缀（以及小写首字母大写字符序列）
+    property-naming-strategy: com.fasterxml.jackson.databind.PropertyNamingStrategy
+
+    # 序列化配置，有多个
+    serialization:
+      # 底层格式化序列后的JSON，换行、缩进等
+      indent-output: true
+      # 忽略无法转换的对象
+      fail_on_empty_beans: true
+    # 反序列化配置，有多个
+    deserialization:
+      # 解析json时，遇到不存在的属性就忽略
+      fail_on_unknown_properties: false
+    # 配置@JsonInclude默认包含哪些属性
+    defaultPropertyInclusion: use_defaults
+    parser:
+      # 允许特殊和转义符
+      allow_unquoted_control_chars: true
+      # 允许单引号
+      allow_single_quotes: true
+    # 配置时区
+    timeZone: Asia/Shanghai
+    # 配置地区
+    locale: zh_CN
