@@ -14,7 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class RegistrationParam {
+public class AccountAuthDTO {
 
     private String username;
 
