@@ -13,8 +13,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class AccountServiceImpl implements AccountService {
 
-    @Autowired
     private AccountRepository accountRepository;
+
+    @Autowired
+    public void setAccountRepository(AccountRepository accountRepository) {
+
+        this.accountRepository = accountRepository;
+    }
 
     @Override
     public void addAccount(Account account) throws Exception {

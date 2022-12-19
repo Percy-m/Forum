@@ -5,24 +5,21 @@ import com.enterprise.forum.repository.AccountRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /**
  * @author Jiayi Zhu
  * 2022/12/17
  */
 @Configuration
-public class SecurityConfig {
+public class SecurityConfiguration {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -41,33 +38,30 @@ public class SecurityConfig {
         };
     }
 
-//    @Bean
-//    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-//
-//        return authenticationConfiguration.getAuthenticationManager();
-//    }
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         return http
                 .authorizeHttpRequests()
-                    .requestMatchers("/api/admin").hasRole("ADMIN")
-                    .requestMatchers("/api/user").hasRole("USER")
-                    .requestMatchers("/api/**").permitAll()
-//                .and()
-//                .formLogin().loginPage("/api/login")
-//                    .usernameParameter("username")
-//                    .passwordParameter("password")
-//                    .defaultSuccessUrl("/api")
+                .requestMatchers("/api/admin").hasRole("ADMIN")
+                .requestMatchers("/api/user").hasRole("USER")
+                .requestMatchers("/api/**").permitAll()
                 .and()
                 .csrf().disable()
                 .build();
     }
 
-//    @Bean
-//    public UsernamePasswordAuthenticationFilter authenticationFilter() {
-//        UsernamePasswordAuthenticationFilter authenticationFilter = new UsernamePasswordAuthenticationFilter();
-//        authenticationFilter.setAuthenticationFailureHandler();
-//    }
+    @Bean
+    public AuthenticationManager authenticationManager(AccountRepository accountRepository) {
+
+        return authentication -> {
+            DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
+            daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
+            daoAuthenticationProvider.setUserDetailsService(userDetailsService(accountRepository));
+
+            return new ProviderManager(daoAuthenticationProvider)
+                    .authenticate(authentication);
+        };
+    }
+
 }

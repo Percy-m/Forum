@@ -18,20 +18,20 @@ spring:
     url: jdbc:postgresql://${my-host}:${my-port}/${my-database}
 
 
-#  sql:
-#    init:
-#      schema-locations: classpath:schema.sql
-#      data-locations: classpath:data.sql
-#      username: ${my-username}
-#      password: ${my-password}
-#      encoding: UTF-8
-#      mode: always
+  sql:
+    init:
+      schema-locations: classpath:schema.sql
+      data-locations: classpath:data.sql
+      username: ${my-username}
+      password: ${my-password}
+      encoding: UTF-8
+      mode: always
   jpa:
     database: postgresql
     show-sql: true
     generate-ddl: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: none
 
 
 
