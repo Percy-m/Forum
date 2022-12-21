@@ -1,5 +1,6 @@
 package com.enterprise.forum.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -60,9 +61,11 @@ public class Account implements Serializable, UserDetails {
             nullable = false)
     private Boolean locked;
 
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "account")
     private List<Topic> topicList;
 
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "account")
     private List<Post> postList;
 

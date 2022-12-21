@@ -1,25 +1,55 @@
 package com.enterprise.forum.config;
 
-import com.enterprise.forum.domain.Account;
-import com.enterprise.forum.repository.AccountRepository;
+import com.enterprise.forum.security.JwtAuthenticationEntryPoint;
+import com.enterprise.forum.security.JwtAuthenticationFilter;
+import com.enterprise.forum.service.AccountService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /**
  * @author Jiayi Zhu
  * 2022/12/17
  */
 @Configuration
+@EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfiguration {
+
+    private JwtAuthenticationEntryPoint authenticationEntryPoint;
+
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    private AccountService userDetailsService;
+
+    @Autowired
+    public void setAuthenticationEntryPoint(JwtAuthenticationEntryPoint authenticationEntryPoint) {
+
+        this.authenticationEntryPoint = authenticationEntryPoint;
+    }
+
+    @Autowired
+    public void setJwtAuthenticationFilter(JwtAuthenticationFilter jwtAuthenticationFilter) {
+
+        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+    }
+
+    @Autowired
+    public void setUserDetailsService(AccountService userDetailsService) {
+
+        this.userDetailsService = userDetailsService;
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -28,39 +58,40 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public UserDetailsService userDetailsService(AccountRepository accountRepository) {
-
-        return username -> {
-            Account account = accountRepository.findAccountByUsername(username);
-            if (account == null)
-                throw new UsernameNotFoundException("");
-            return account;
-        };
-    }
-
-    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         return http
-                .authorizeHttpRequests()
-                .requestMatchers("/api/admin").hasRole("ADMIN")
-                .requestMatchers("/api/user").hasRole("USER")
-                .requestMatchers("/api/**").permitAll()
+                .cors()
                 .and()
                 .csrf().disable()
-                .build();
+                .exceptionHandling()
+                .authenticationEntryPoint(authenticationEntryPoint)
+                .and()
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
+                .and()
+                .authorizeHttpRequests()
+                .requestMatchers("/api/register", "/api/login")
+                .permitAll()
+                .requestMatchers("/api/admin")
+                .hasAuthority("ROLE_ADMIN")
+                .requestMatchers("/api/user")
+                .hasAuthority("ROLE_USER")
+                .anyRequest()
+                .authenticated()
+                .and()
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class).build();
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AccountRepository accountRepository) {
+    public AuthenticationManager authenticationManager() {
 
         return authentication -> {
             DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
             daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
-            daoAuthenticationProvider.setUserDetailsService(userDetailsService(accountRepository));
+            daoAuthenticationProvider.setUserDetailsService(userDetailsService);
 
-            return new ProviderManager(daoAuthenticationProvider)
-                    .authenticate(authentication);
+            return new ProviderManager(daoAuthenticationProvider).authenticate(authentication);
         };
     }
 

@@ -1,5 +1,6 @@
 package com.enterprise.forum.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -67,6 +68,7 @@ public class Topic implements Serializable {
             nullable = false)
     private Boolean topped;
 
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "topic")
     private List<Post> postList = new ArrayList<>();
 
