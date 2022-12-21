@@ -6,6 +6,7 @@ import com.enterprise.forum.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -71,12 +72,10 @@ public class SecurityConfiguration {
                 .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
                 .and()
                 .authorizeHttpRequests()
-                .requestMatchers("/api/register", "/api/login")
-                .permitAll()
-                .requestMatchers("/api/admin")
-                .hasAuthority("ROLE_ADMIN")
-                .requestMatchers("/api/user")
-                .hasAuthority("ROLE_USER")
+                .requestMatchers("/api/register", "/api/login").permitAll()
+                .requestMatchers("/api/admin").hasRole("ADMIN")
+                .requestMatchers("/api/user").hasRole("USER")
+                .requestMatchers(HttpMethod.GET, "/api/**").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()

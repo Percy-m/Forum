@@ -1,6 +1,7 @@
 package com.enterprise.forum.dto;
 
 import com.enterprise.forum.domain.Account;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,8 +13,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  * 2022/12/17
  */
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class AccountAuthDTO {
 
     private String username;
