@@ -12,12 +12,18 @@
         |—— domain 数据库实体
         |—— dto 数据传输对象
         |—— exception 自定义异常类
-        |—— mapper 数据库访问层
+        |—— repository 数据库访问层
+        |—— security jwt-token验证
         |—— service 服务层
         |—— utils 工具类
         |—— vo 视图对象
     |—— resources
         |—— static 静态文件
-        data.sql
-        schema.sql
+        |—— templates 模板文件
+        application.yml 主配置文件
+        application-template.yml 配置模板
+        data.sql 建表
+        schema.sql 插入数据
 ```
+
+注：启动项目前，请在<code>resources</code>文件夹下新建<code>application-develop.yml</code>文件，将<code>application-template.yml</code>的内容复制到<code>application-develop.yml</code>下，并作适当修改。
