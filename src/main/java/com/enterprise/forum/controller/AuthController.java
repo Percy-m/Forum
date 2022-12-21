@@ -1,5 +1,6 @@
 package com.enterprise.forum.controller;
 
+import com.enterprise.forum.domain.Account;
 import com.enterprise.forum.security.JwtTokenProvider;
 import com.enterprise.forum.dto.AccountAuthDTO;
 import com.enterprise.forum.service.AccountService;
@@ -9,6 +10,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -90,11 +92,9 @@ public class AuthController {
 
     // for authentication test
     @GetMapping("/cu")
-    public CommonVO currentUser() {
+    public CommonVO currentUser(@AuthenticationPrincipal Account account) {
 
-        Object o =
-                SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return CommonVO.success(o);
+        return CommonVO.success(account);
     }
 
 }

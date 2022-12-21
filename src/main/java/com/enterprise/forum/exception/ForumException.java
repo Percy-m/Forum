@@ -1,23 +1,19 @@
 package com.enterprise.forum.exception;
 
-import org.springframework.http.HttpStatus;
-
 /**
  * @author Jiayi Zhu
- * 2022/12/19
+ * 2022/12/21
  */
 public class ForumException extends RuntimeException{
 
-    private final HttpStatus status;
-
-    public ForumException(HttpStatus status, String message) {
+    public ForumException(String message) {
 
         super(message);
-        this.status = status;
     }
 
-    public HttpStatus getStatus() {
+    public ForumException() {
 
-        return status;
+        super();
     }
+
 }

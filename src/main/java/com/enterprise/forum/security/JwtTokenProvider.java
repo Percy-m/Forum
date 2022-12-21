@@ -1,7 +1,7 @@
 package com.enterprise.forum.security;
 
 
-import com.enterprise.forum.exception.ForumException;
+import com.enterprise.forum.exception.JwtAuthException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
@@ -59,15 +59,15 @@ public class JwtTokenProvider {
             return true;
         }
         catch (SecurityException e){
-            throw new ForumException(HttpStatus.BAD_REQUEST, "Invalid JWT signature");
+            throw new JwtAuthException(HttpStatus.BAD_REQUEST, "Invalid JWT signature");
         } catch (MalformedJwtException e) {
-            throw new ForumException(HttpStatus.BAD_REQUEST, "Invalid JWT token");
+            throw new JwtAuthException(HttpStatus.BAD_REQUEST, "Invalid JWT token");
         } catch (ExpiredJwtException e) {
-            throw new ForumException(HttpStatus.BAD_REQUEST, "Expired JWT token");
+            throw new JwtAuthException(HttpStatus.BAD_REQUEST, "Expired JWT token");
         } catch (UnsupportedJwtException e) {
-            throw new ForumException(HttpStatus.BAD_REQUEST, "Unsupported JWT token");
+            throw new JwtAuthException(HttpStatus.BAD_REQUEST, "Unsupported JWT token");
         } catch (IllegalArgumentException e) {
-            throw new ForumException(HttpStatus.BAD_REQUEST, "JWT claims string is empty.");
+            throw new JwtAuthException(HttpStatus.BAD_REQUEST, "JWT claims string is empty.");
         }
     }
 

@@ -1,6 +1,7 @@
 package com.enterprise.forum.service.impl;
 
 import com.enterprise.forum.domain.Account;
+import com.enterprise.forum.exception.BusinessException;
 import com.enterprise.forum.repository.AccountRepository;
 import com.enterprise.forum.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,7 @@ import java.util.UUID;
 @Service
 public class AccountServiceImpl implements AccountService {
 
-    private static final String USERNAME_NOT_FOUND_MESSAGE = "Username not exist";
+    private static final String USERNAME_NOT_FOUND_MESSAGE = "用户名不存在";
 
     private AccountRepository accountRepository;
 
@@ -29,21 +30,21 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void addAccount(Account account) throws Exception {
+    public void addAccount(Account account) throws BusinessException {
 
         Optional<Account> oldAccount = accountRepository.findAccountByUsername(account.getUsername());
         if (oldAccount.isPresent()) {
-            throw new Exception("");
+            throw BusinessException.UsernameExisted;
         }
         accountRepository.save(account);
     }
 
     @Override
-    public void updateUsername(UUID id, String newUsername) throws Exception {
+    public void updateUsername(UUID id, String newUsername) throws BusinessException {
 
         Optional<Account> optionalAccount = accountRepository.findById(id);
         if (optionalAccount.isEmpty()) {
-            throw new Exception();
+            throw BusinessException.UsernameExisted;
         }
         Account account = optionalAccount.get();
         account.setUsername(newUsername);
