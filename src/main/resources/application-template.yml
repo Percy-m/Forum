@@ -10,14 +10,19 @@ my-username: un
 my-password: pw
 
 
+# Jwt String
+jwt-secret: s71uE1N861fVWFi8pjZqHwG15NLOB5vCGq0-Cb4w10tTtY7-WPwXyM_cQaSCdMid
+jwt-expiration-milliseconds: 36000000 # 10 hours
+
+
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
     username: ${my-username}
     password: ${my-password}
     url: jdbc:postgresql://${my-host}:${my-port}/${my-database}
-
-
+    hikari:
+      max-lifetime: 60000 # 10 minutes
   sql:
     init:
       schema-locations: classpath:schema.sql
