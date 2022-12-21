@@ -1,9 +1,11 @@
 package com.enterprise.forum.repository;
 
 import com.enterprise.forum.domain.Account;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.ListCrudRepository;
+import org.springframework.data.repository.ListPagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -11,9 +13,12 @@ import java.util.UUID;
  * 2022/12/14
  */
 @Repository
-public interface AccountRepository extends CrudRepository<Account, UUID> {
+public interface AccountRepository extends
+        ListCrudRepository<Account, UUID>, ListPagingAndSortingRepository<Account, UUID>
+{
 
-    <S extends Account> S findAccountByUsername(String username);
+    Optional<Account> findAccountByUsername(String username);
 
+    boolean existsAccountByUsername(String username);
 
 }

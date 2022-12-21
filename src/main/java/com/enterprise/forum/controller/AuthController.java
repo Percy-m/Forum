@@ -1,5 +1,6 @@
 package com.enterprise.forum.controller;
 
+import com.enterprise.forum.security.JwtTokenProvider;
 import com.enterprise.forum.dto.AccountAuthDTO;
 import com.enterprise.forum.service.AccountService;
 import com.enterprise.forum.vo.CommonVO;
@@ -9,6 +10,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,6 +27,8 @@ public class AuthController {
     private AccountService accountService;
 
     private PasswordEncoder passwordEncoder;
+
+    private JwtTokenProvider jwtTokenProvider;
 
     @Autowired
     public void setAuthenticationManager(AuthenticationManager authenticationManager) {
@@ -44,22 +48,31 @@ public class AuthController {
         this.passwordEncoder = passwordEncoder;
     }
 
+    @Autowired
+    public void setJwtTokenProvider(JwtTokenProvider jwtTokenProvider) {
+
+        this.jwtTokenProvider = jwtTokenProvider;
+    }
+
     @PostMapping("/login")
     public CommonVO login(@RequestBody AccountAuthDTO param) {
 
         try {
+            UserDetails currentAccount = accountService.loadUserByUsername(param.getUsername());
+
             Authentication authentication =
                     authenticationManager.authenticate(
                             new UsernamePasswordAuthenticationToken(
-                                    param.getUsername(),
-                                    param.getPassword()));
+                                    currentAccount,
+                                     param.getPassword(),
+                                    currentAccount.getAuthorities()));
             SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            String token = jwtTokenProvider.generateToken(authentication);
+            return CommonVO.success(token);
+        } catch (AuthenticationException e) {
+            return CommonVO.error(e.getMessage());
         }
-        catch (AuthenticationException e) {
-//            e.printStackTrace();
-            return CommonVO.error("用户名或密码错误");
-        }
-        return CommonVO.ok();
     }
 
     @PostMapping("/register")
@@ -73,6 +86,15 @@ public class AuthController {
         }
 
         return CommonVO.ok();
+    }
+
+    // for authentication test
+    @GetMapping("/cu")
+    public CommonVO currentUser() {
+
+        Object o =
+                SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return CommonVO.success(o);
     }
 
 }
