@@ -6,14 +6,10 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -29,7 +25,7 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class Account implements Serializable, UserDetails {
+public class Account implements Serializable {
 
     public static final String ROLE_USER = "ROLE_USER";
 
@@ -71,40 +67,6 @@ public class Account implements Serializable, UserDetails {
 
     @Serial
     private static final long serialVersionUID = 1L;
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-
-        if (role == 0)
-            return List.of(new SimpleGrantedAuthority(ROLE_USER));
-        else return List.of(
-                new SimpleGrantedAuthority(ROLE_USER),
-                new SimpleGrantedAuthority(ROLE_ADMIN));
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-
-        return !locked;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-
-        return true;
-    }
 
     /**
      * Returns a common user account instead of an admin account
