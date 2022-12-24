@@ -1,6 +1,6 @@
 package com.enterprise.forum.controller;
 
-import com.enterprise.forum.domain.Account;
+import com.enterprise.forum.annotation.CurrentAccount;
 import com.enterprise.forum.security.JwtTokenProvider;
 import com.enterprise.forum.dto.AccountAuthDTO;
 import com.enterprise.forum.service.AccountService;
@@ -10,7 +10,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -83,16 +82,15 @@ public class AuthController {
         try {
             accountService.addAccount(param.toAccount(passwordEncoder));
         } catch (Exception e) {
-//            e.printStackTrace();
-            return CommonVO.error("this username has been registered");
+            return CommonVO.error(e.getMessage());
         }
 
         return CommonVO.ok();
     }
 
     // for authentication test
-    @GetMapping("/cu")
-    public CommonVO currentUser(@AuthenticationPrincipal Account account) {
+    @GetMapping("/current")
+    public CommonVO currentAccount(@CurrentAccount UserDetails account) {
 
         return CommonVO.success(account);
     }

@@ -1,6 +1,7 @@
 package com.enterprise.forum.service.impl;
 
 import com.enterprise.forum.domain.Account;
+import com.enterprise.forum.dto.AccountUserDetailsDTO;
 import com.enterprise.forum.exception.BusinessException;
 import com.enterprise.forum.repository.AccountRepository;
 import com.enterprise.forum.service.AccountService;
@@ -54,9 +55,9 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        Optional<Account> account = accountRepository.findAccountByUsername(username);
-        if (account.isPresent()) {
-            return account.get();
+        Optional<Account> optionalAccount = accountRepository.findAccountByUsername(username);
+        if (optionalAccount.isPresent()) {
+            return AccountUserDetailsDTO.parseAccount(optionalAccount.get());
         }
         throw new UsernameNotFoundException(USERNAME_NOT_FOUND_MESSAGE);
     }
