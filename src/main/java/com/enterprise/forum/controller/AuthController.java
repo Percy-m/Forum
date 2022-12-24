@@ -80,7 +80,7 @@ public class AuthController {
     public CommonVO registration(@RequestBody AccountAuthDTO param) {
 
         try {
-            accountService.addAccount(param.toAccount(passwordEncoder));
+            accountService.addAccount(param, passwordEncoder::encode);
         } catch (Exception e) {
             return CommonVO.error(e.getMessage());
         }

@@ -19,7 +19,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class AccountUserDetailsDTO implements UserDetails {
+public class AccountUserDetails implements UserDetails {
 
     private static final GrantedAuthority ROLE_USER
             = new SimpleGrantedAuthority("ROLE_USER");
@@ -85,14 +85,14 @@ public class AccountUserDetailsDTO implements UserDetails {
     }
 
     /**
-     * Parse an {@link Account} object to {@link AccountUserDetailsDTO}
+     * Parse an {@link Account} object to {@link AccountUserDetails}
      *
      * @param account the account object
      * @return the dto object
      */
-    public static AccountUserDetailsDTO parseAccount(Account account) {
+    public static AccountUserDetails fromAccount(Account account) {
 
-        return new AccountUserDetailsDTO(
+        return new AccountUserDetails(
                 account.getId().toString(),
                 account.getUsername(),
                 account.getPassword(),

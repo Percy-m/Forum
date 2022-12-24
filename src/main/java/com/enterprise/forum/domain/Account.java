@@ -12,6 +12,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Function;
 
 /**
  * @author Jiayi Zhu
@@ -75,12 +76,14 @@ public class Account implements Serializable {
      * @param password the password
      * @return a common user account
      */
-    public static Account commonUser(String username, String password) {
+    public static Account commonUser(String username,
+                                     String password,
+                                     Function<String, String> encode) {
 
         return new Account(
                 UUID.randomUUID(),
                 username,
-                password,
+                encode.apply(password),
                 0,
                 false,
                 new ArrayList<>(),

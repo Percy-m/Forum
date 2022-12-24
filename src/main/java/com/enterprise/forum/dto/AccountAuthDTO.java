@@ -5,7 +5,8 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.function.Function;
 
 
 /**
@@ -21,8 +22,8 @@ public class AccountAuthDTO {
 
     private String password;
 
-    public Account toAccount(PasswordEncoder passwordEncoder) {
+    public Account toAccount(Function<String, String> encode) {
 
-        return Account.commonUser(username, passwordEncoder.encode(password));
+        return Account.commonUser(username, password, encode);
     }
 }

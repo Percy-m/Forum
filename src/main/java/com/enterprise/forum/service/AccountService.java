@@ -1,10 +1,12 @@
 package com.enterprise.forum.service;
 
-import com.enterprise.forum.domain.Account;
+import com.enterprise.forum.dto.AccountAuthDTO;
+import com.enterprise.forum.dto.AccountUserDetails;
+import com.enterprise.forum.dto.UsernameChangeDTO;
 import com.enterprise.forum.exception.BusinessException;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
-import java.util.UUID;
+import java.util.function.Function;
 
 /**
  * @author Jiayi Zhu
@@ -12,9 +14,10 @@ import java.util.UUID;
  */
 public interface AccountService extends UserDetailsService{
 
-    void addAccount(Account account) throws BusinessException;
+    void addAccount(AccountAuthDTO accountAuthDTO, Function<String, String> encode) throws BusinessException;
 
-    void updateUsername(UUID id, String newUsername) throws BusinessException;
+    void updateUsername(AccountUserDetails accountUserDetails,
+                        UsernameChangeDTO usernameChangeDTO) throws BusinessException;
 
 
 
