@@ -3,6 +3,7 @@ server:
 
 # Postgres Connection
 # Custom Configuration
+# Type your configurations here:
 my-host: 127.0.0.1
 my-port: 5432
 my-database: db
