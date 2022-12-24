@@ -45,6 +45,9 @@ public class AccountServiceImpl implements AccountService {
 
         Optional<Account> optionalAccount = accountRepository.findById(id);
         if (optionalAccount.isEmpty()) {
+            throw BusinessException.UserNotFound;
+        }
+        if (accountRepository.existsAccountByUsername(newUsername)) {
             throw BusinessException.UsernameExisted;
         }
         Account account = optionalAccount.get();

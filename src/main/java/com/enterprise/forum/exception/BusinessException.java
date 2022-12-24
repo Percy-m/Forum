@@ -8,6 +8,8 @@ public class BusinessException extends ForumException {
 
     public static BusinessException UsernameExisted = new BusinessException("用户名已存在");
 
+    public static BusinessException UserNotFound = new BusinessException("找不到该用户");
+
     private final Integer code;
 
     public BusinessException(Integer code, String message) {
