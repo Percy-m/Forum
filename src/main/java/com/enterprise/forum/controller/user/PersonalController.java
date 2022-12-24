@@ -1,12 +1,12 @@
 package com.enterprise.forum.controller.user;
 
-import com.enterprise.forum.domain.Account;
+import com.enterprise.forum.annotation.CurrentAccount;
+import com.enterprise.forum.dto.AccountUserDetails;
 import com.enterprise.forum.dto.UsernameChangeDTO;
 import com.enterprise.forum.exception.BusinessException;
 import com.enterprise.forum.service.AccountService;
 import com.enterprise.forum.vo.CommonVO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -29,9 +29,10 @@ public class PersonalController {
 
     @PutMapping("/username")
     public CommonVO changeUsername(@RequestBody UsernameChangeDTO param,
-                                   @AuthenticationPrincipal Account account) {
+                                   @CurrentAccount AccountUserDetails account) {
         try {
-            accountService.updateUsername(account.getId(), param.getNewUsername());
+            accountService.updateUsername(account, param);
+            // need to request login again
         }
         catch (BusinessException e) {
             return CommonVO.error(e.getMessage());

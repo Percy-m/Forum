@@ -1,7 +1,9 @@
 package com.enterprise.forum.service.impl;
 
 import com.enterprise.forum.domain.Account;
-import com.enterprise.forum.dto.AccountUserDetailsDTO;
+import com.enterprise.forum.dto.AccountAuthDTO;
+import com.enterprise.forum.dto.AccountUserDetails;
+import com.enterprise.forum.dto.UsernameChangeDTO;
 import com.enterprise.forum.exception.BusinessException;
 import com.enterprise.forum.repository.AccountRepository;
 import com.enterprise.forum.service.AccountService;
@@ -10,8 +12,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Function;
 
 /**
  * @author Jiayi Zhu
@@ -31,26 +33,29 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void addAccount(Account account) throws BusinessException {
+    public void addAccount(AccountAuthDTO accountAuthDTO, Function<String, String> encode) throws BusinessException {
 
-        Optional<Account> oldAccount = accountRepository.findAccountByUsername(account.getUsername());
-        if (oldAccount.isPresent()) {
+        if (accountRepository.existsAccountByUsername(accountAuthDTO.getUsername())) {
             throw BusinessException.UsernameExisted;
         }
+
+        Account account = accountAuthDTO.toAccount(encode);
         accountRepository.save(account);
     }
 
     @Override
-    public void updateUsername(UUID id, String newUsername) throws BusinessException {
+    public void updateUsername(AccountUserDetails accountUserDetails,
+                               UsernameChangeDTO usernameChangeDTO) throws BusinessException {
 
-        Optional<Account> optionalAccount = accountRepository.findById(id);
-        if (optionalAccount.isEmpty()) {
-            throw BusinessException.UserNotFound;
-        }
+        UUID id = UUID.fromString(accountUserDetails.getId());
+        String newUsername = usernameChangeDTO.getNewUsername();
+
+        Account account = accountRepository.findById(id)
+                .orElseThrow(() -> BusinessException.UserNotFound);
         if (accountRepository.existsAccountByUsername(newUsername)) {
             throw BusinessException.UsernameExisted;
         }
-        Account account = optionalAccount.get();
+
         account.setUsername(newUsername);
         accountRepository.save(account);
     }
@@ -58,10 +63,9 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        Optional<Account> optionalAccount = accountRepository.findAccountByUsername(username);
-        if (optionalAccount.isPresent()) {
-            return AccountUserDetailsDTO.parseAccount(optionalAccount.get());
-        }
-        throw new UsernameNotFoundException(USERNAME_NOT_FOUND_MESSAGE);
+        Account account = accountRepository.findAccountByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException(USERNAME_NOT_FOUND_MESSAGE));
+
+        return AccountUserDetails.fromAccount(account);
     }
 }
