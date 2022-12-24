@@ -1,10 +1,9 @@
 package com.enterprise.forum.dto;
 
 import com.enterprise.forum.domain.Account;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 
@@ -13,12 +12,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  * 2022/12/17
  */
 @Data
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class AccountAuthDTO {
 
+    @NotBlank
     private String username;
 
+    @NotBlank
+    @Size(min = 8)
     private String password;
 
     public Account toAccount(PasswordEncoder passwordEncoder) {

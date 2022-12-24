@@ -5,6 +5,7 @@ import com.enterprise.forum.security.JwtTokenProvider;
 import com.enterprise.forum.dto.AccountAuthDTO;
 import com.enterprise.forum.service.AccountService;
 import com.enterprise.forum.vo.CommonVO;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -56,7 +57,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public CommonVO login(@RequestBody AccountAuthDTO param) {
+    public CommonVO login(@Valid @RequestBody AccountAuthDTO param) {
 
         try {
             UserDetails currentAccount = accountService.loadUserByUsername(param.getUsername());
@@ -77,7 +78,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public CommonVO registration(@RequestBody AccountAuthDTO param) {
+    public CommonVO registration(@Valid @RequestBody AccountAuthDTO param) {
 
         try {
             accountService.addAccount(param.toAccount(passwordEncoder));
