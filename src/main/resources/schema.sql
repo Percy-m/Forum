@@ -36,8 +36,7 @@ CREATE TABLE "topic" (
 
     PRIMARY KEY ("id"),
     FOREIGN KEY ("owner_id") REFERENCES "account"("id")
-        ON DELETE CASCADE ON UPDATE CASCADE,
-    UNIQUE ("title", "owner_id")
+        ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 /*
