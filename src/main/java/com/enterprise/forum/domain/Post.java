@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 /**
  * @author Jiayi Zhu
@@ -24,9 +23,9 @@ public class Post implements Serializable {
 
     @Id
     @Column(name = "id",
-            columnDefinition = "uuid",
+            columnDefinition = "bigint",
             nullable = false)
-    private UUID id;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "owner_id",
@@ -59,10 +58,10 @@ public class Post implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    public static Post of(Account account, Topic topic, String content, LocalDateTime time) {
+    public static Post of(long id, Account account, Topic topic, String content, LocalDateTime time) {
 
         return new Post(
-                UUID.randomUUID(),
+                id,
                 account,
                 topic,
                 content,

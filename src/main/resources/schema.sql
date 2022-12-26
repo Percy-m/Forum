@@ -26,7 +26,7 @@ CREATE TABLE "account" (
     "topic": 主题帖
 */
 CREATE TABLE "topic" (
-    "id"            UUID                        NOT NULL,   -- 主题帖id
+    "id"            BIGINT                      NOT NULL,   -- 主题帖id
     "title"         CHARACTER VARYING (20)      NOT NULL,   -- 主题帖标题
     "owner_id"      UUID                        NOT NULL,   -- 发帖人
     "content"       CHARACTER VARYING (500)     NOT NULL,   -- 内容
@@ -44,9 +44,9 @@ CREATE TABLE "topic" (
     "post": 回复贴
 */
 CREATE TABLE "post" (
-    "id"            UUID                        NOT NULL,   -- 回复贴id
+    "id"            BIGINT                      NOT NULL,   -- 回复贴id
     "owner_id"      UUID                        NOT NULL,   -- 回复人
-    "topic_id"      UUID                        NOT NULL,   -- 所属主题帖
+    "topic_id"      BIGINT                      NOT NULL,   -- 所属主题帖
     "content"       CHARACTER VARYING (200)     NOT NULL,   -- 内容
     "time"          TIMESTAMP                   NOT NULL,   -- 回复时间
 
