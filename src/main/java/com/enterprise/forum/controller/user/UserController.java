@@ -6,6 +6,7 @@ import com.enterprise.forum.dto.UsernameChangeDTO;
 import com.enterprise.forum.exception.BusinessException;
 import com.enterprise.forum.service.AccountService;
 import com.enterprise.forum.vo.CommonVO;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("/api/user")
-public class PersonalController {
+public class UserController {
 
     private AccountService accountService;
 
@@ -28,7 +29,7 @@ public class PersonalController {
     }
 
     @PutMapping("/username")
-    public CommonVO changeUsername(@RequestBody UsernameChangeDTO param,
+    public CommonVO changeUsername(@Valid @RequestBody UsernameChangeDTO param,
                                    @CurrentAccount AccountUserDetails account) {
         try {
             accountService.updateUsername(account, param);

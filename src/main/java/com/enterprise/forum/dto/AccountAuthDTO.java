@@ -1,6 +1,7 @@
 package com.enterprise.forum.dto;
 
 import com.enterprise.forum.domain.Account;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,8 +19,10 @@ import java.util.function.Function;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class AccountAuthDTO {
 
+    @NotBlank
     private String username;
 
+    @NotBlank
     private String password;
 
     public Account toAccount(Function<String, String> encode) {
