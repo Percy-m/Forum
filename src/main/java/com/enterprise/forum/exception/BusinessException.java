@@ -10,6 +10,9 @@ public class BusinessException extends ForumException {
 
     public static BusinessException UserNotFound = new BusinessException("找不到该用户");
 
+    public static BusinessException TopicNotFound = new BusinessException("找不到主题帖");
+
+
     private final Integer code;
 
     public BusinessException(Integer code, String message) {

@@ -25,4 +25,11 @@ public class GlobalExceptionHandler {
         return CommonVO.error("ValidationException: " + e.getMessage());
     }
 
+//    @ResponseStatus(HttpStatus.BAD_REQUEST)
+//    @ExceptionHandler(Exception.class)
+//    public CommonVO handle() {
+//
+//        return CommonVO.error("401");
+//    }
+
 }

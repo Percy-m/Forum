@@ -12,7 +12,6 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 
 /**
@@ -20,9 +19,7 @@ import java.util.UUID;
  * 2022/12/17
  */
 @Entity
-@Table(name = "topic", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"title", "owner_id"})
-})
+@Table(name = "topic")
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -32,7 +29,7 @@ public class Topic implements Serializable {
     @Column(name = "id",
             columnDefinition = "uuid",
             nullable = false)
-    private UUID id;
+    private Long id;
 
     @Column(name = "title",
             columnDefinition = "character varying (20)",
@@ -52,6 +49,11 @@ public class Topic implements Serializable {
             columnDefinition = "character varying (500)",
             nullable = false)
     private String content;
+
+    @Column(name = "replies",
+            columnDefinition = "integer",
+            nullable = false)
+    private Integer replies;
 
     @Column(name = "clicks",
             columnDefinition = "integer",
@@ -75,13 +77,14 @@ public class Topic implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    public static Topic of(String title, Account account, String content, LocalDateTime time) {
+    public static Topic of(long id, String title, Account account, String content, LocalDateTime time) {
 
         return new Topic(
-                UUID.randomUUID(),
+                id,
                 title,
                 account,
                 content,
+                0,
                 0,
                 time,
                 false,

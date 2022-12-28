@@ -1,44 +1,52 @@
 server:
   port: 8080
 
-# Postgres Connection
-# Custom Configuration
-# Type your configurations here:
-my-host: 127.0.0.1
-my-port: 5432
-my-database: db
-my-username: un
-my-password: pw
-
-
-# Jwt String
-jwt-secret: s71uE1N861fVWFi8pjZqHwG15NLOB5vCGq0-Cb4w10tTtY7-WPwXyM_cQaSCdMid
-jwt-expiration-milliseconds: 36000000 # 10 hours
-
+# Variables defined for the project
+forum:
+  # Role for accounts
+  #  role:
+  #    user: USER
+  #    admin: ADMIN
+  # Postgres Connection
+  db-conn:
+    host: 127.0.0.1
+    port: 5432
+    database: your-database
+    username: your-username
+    password: your-password
+  # Jwt String
+  jwt:
+    secret: s71uE1N861fVWFi8pjZqHwG15NLOB5vCGq0-Cb4w10tTtY7-WPwXyM_cQaSCdMid
+    expiration-milliseconds: 36000000 # 10 hours
+  # Id for Snowflake
+  snowflake:
+    worker-id: 10
+    datacenter-id: 15
 
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    username: ${my-username}
-    password: ${my-password}
-    url: jdbc:postgresql://${my-host}:${my-port}/${my-database}
-    hikari:
-      max-lifetime: 60000 # 10 minutes
+    username: ${forum.db-conn.username}
+    password: ${forum.db-conn.password}
+    url: jdbc:postgresql://${forum.db-conn.host}:${forum.db-conn.port}/${forum.db-conn.database}
+  #    hikari:
+  #      max-lifetime: 60000 # 10 minutes
   sql:
     init:
       schema-locations: classpath:schema.sql
       data-locations: classpath:data.sql
-      username: ${my-username}
-      password: ${my-password}
+      username: ${forum.db-conn.username}
+      password: ${forum.db-conn.password}
       encoding: UTF-8
       mode: always
   jpa:
     database: postgresql
     show-sql: true
     generate-ddl: true
-    hibernate:
-      ddl-auto: none
 
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
 
 
   jackson:

@@ -26,27 +26,27 @@ CREATE TABLE "account" (
     "topic": 主题帖
 */
 CREATE TABLE "topic" (
-    "id"            UUID                        NOT NULL,   -- 主题帖id
+    "id"            BIGINT                      NOT NULL,   -- 主题帖id
     "title"         CHARACTER VARYING (20)      NOT NULL,   -- 主题帖标题
     "owner_id"      UUID                        NOT NULL,   -- 发帖人
     "content"       CHARACTER VARYING (500)     NOT NULL,   -- 内容
+    "replies"       INTEGER                     NOT NULL,   -- 回复数
     "clicks"        INTEGER                     NOT NULL,   -- 点击量
     "time"          TIMESTAMP                   NOT NULL,   -- 发帖时间
     "is_topped"     BOOLEAN                     NOT NULL,   -- 是否被置顶
 
     PRIMARY KEY ("id"),
     FOREIGN KEY ("owner_id") REFERENCES "account"("id")
-        ON DELETE CASCADE ON UPDATE CASCADE,
-    UNIQUE ("title", "owner_id")
+        ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 /*
     "post": 回复贴
 */
 CREATE TABLE "post" (
-    "id"            UUID                        NOT NULL,   -- 回复贴id
+    "id"            BIGINT                      NOT NULL,   -- 回复贴id
     "owner_id"      UUID                        NOT NULL,   -- 回复人
-    "topic_id"      UUID                        NOT NULL,   -- 所属主题帖
+    "topic_id"      BIGINT                      NOT NULL,   -- 所属主题帖
     "content"       CHARACTER VARYING (200)     NOT NULL,   -- 内容
     "time"          TIMESTAMP                   NOT NULL,   -- 回复时间
 

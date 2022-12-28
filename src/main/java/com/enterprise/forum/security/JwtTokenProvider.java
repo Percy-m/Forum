@@ -19,10 +19,10 @@ import java.util.Date;
 @Component
 public class JwtTokenProvider {
 
-    @Value("${jwt-secret}")
+    @Value("${forum.jwt.secret}")
     private String jwtSecret;
 
-    @Value("${jwt-expiration-milliseconds}")
+    @Value("${forum.jwt.expiration-milliseconds}")
     private int jwtExpirationInMs;
 
     // generate token
