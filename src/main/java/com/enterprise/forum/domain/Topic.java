@@ -50,6 +50,11 @@ public class Topic implements Serializable {
             nullable = false)
     private String content;
 
+    @Column(name = "replies",
+            columnDefinition = "integer",
+            nullable = false)
+    private Integer replies;
+
     @Column(name = "clicks",
             columnDefinition = "integer",
             nullable = false)
@@ -79,6 +84,7 @@ public class Topic implements Serializable {
                 title,
                 account,
                 content,
+                0,
                 0,
                 time,
                 false,

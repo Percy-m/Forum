@@ -9,6 +9,8 @@ import com.enterprise.forum.repository.TopicRepository;
 import com.enterprise.forum.service.TopicService;
 import com.enterprise.forum.utils.SnowflakeIdUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -56,5 +58,10 @@ public class TopicServiceImpl implements TopicService {
                 account,
                 topicDTO.getContent(),
                 LocalDateTime.now()));
+    }
+
+    public Page<Topic> getAllTopics(Pageable pageable) {
+
+        return topicRepository.getAllBy(pageable);
     }
 }

@@ -19,6 +19,4 @@ public interface AccountService extends UserDetailsService{
     void updateUsername(AccountUserDetails accountUserDetails,
                         UsernameChangeDTO usernameChangeDTO) throws BusinessException;
 
-
-
 }

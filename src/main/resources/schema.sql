@@ -30,6 +30,7 @@ CREATE TABLE "topic" (
     "title"         CHARACTER VARYING (20)      NOT NULL,   -- 主题帖标题
     "owner_id"      UUID                        NOT NULL,   -- 发帖人
     "content"       CHARACTER VARYING (500)     NOT NULL,   -- 内容
+    "replies"       INTEGER                     NOT NULL,   -- 回复数
     "clicks"        INTEGER                     NOT NULL,   -- 点击量
     "time"          TIMESTAMP                   NOT NULL,   -- 发帖时间
     "is_topped"     BOOLEAN                     NOT NULL,   -- 是否被置顶

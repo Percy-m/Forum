@@ -1,6 +1,8 @@
 package com.enterprise.forum.repository;
 
 import com.enterprise.forum.domain.Topic;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.ListCrudRepository;
 import org.springframework.data.repository.ListPagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
@@ -13,4 +15,5 @@ import org.springframework.stereotype.Repository;
 public interface TopicRepository extends
         ListCrudRepository<Topic, Long>, ListPagingAndSortingRepository<Topic, Long> {
 
+    Page<Topic> getAllBy(Pageable pageable);
 }
