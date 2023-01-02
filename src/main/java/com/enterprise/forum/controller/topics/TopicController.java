@@ -41,9 +41,9 @@ public class TopicController {
         try {
             topicService.addTopic(param, account.getId());
         } catch (BusinessException e) {
-            return CommonVO.error(e.getMessage());
+            return CommonVO.error(e.getCode(), e.getMessage());
         }
-        return CommonVO.ok();
+        return CommonVO.created();
     }
 
     @GetMapping()
@@ -60,6 +60,6 @@ public class TopicController {
                         topic.getClicks(),
                         topic.getTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                 );
-        return CommonVO.success(topicVOPage);
+        return CommonVO.ok(topicVOPage);
     }
 }

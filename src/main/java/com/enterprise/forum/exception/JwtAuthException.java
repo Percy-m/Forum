@@ -1,12 +1,13 @@
 package com.enterprise.forum.exception;
 
+import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 /**
  * @author Jiayi Zhu
  * 2022/12/19
  */
-
+@Getter
 public class JwtAuthException extends ForumException{
 
     public static JwtAuthException RefreshTokenNotFound
@@ -15,16 +16,20 @@ public class JwtAuthException extends ForumException{
     public static JwtAuthException RefreshTokenNotMatch
             = new JwtAuthException(HttpStatus.BAD_REQUEST, "Refresh Token Not Match");
 
-    private final HttpStatus status;
+
+    public JwtAuthException(int code, String message) {
+
+        super(code, message);
+    }
 
     public JwtAuthException(HttpStatus status, String message) {
 
-        super(message);
-        this.status = status;
+        this(status.value(), message);
     }
 
     public HttpStatus getStatus() {
 
-        return status;
+        return HttpStatus.valueOf(getCode());
     }
+
 }

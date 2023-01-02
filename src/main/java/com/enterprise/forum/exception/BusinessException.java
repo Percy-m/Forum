@@ -1,33 +1,37 @@
 package com.enterprise.forum.exception;
 
+import lombok.Getter;
+import org.springframework.http.HttpStatus;
+
 /**
  * @author Jiayi Zhu
  * 2022/12/21
  */
+@Getter
 public class BusinessException extends ForumException {
 
-    public static BusinessException UsernameExisted = new BusinessException("用户名已存在");
+    public static BusinessException UsernameExisted
+            = new BusinessException(HttpStatus.BAD_REQUEST, "用户名已存在");
 
-    public static BusinessException UserNotFound = new BusinessException("找不到该用户");
+    public static BusinessException UserNotFound
+            = new BusinessException(HttpStatus.NOT_FOUND, "找不到该用户");
 
-    public static BusinessException TopicNotFound = new BusinessException("找不到主题帖");
+    public static BusinessException TopicNotFound
+            = new BusinessException(HttpStatus.NOT_FOUND, "找不到主题帖");
 
 
-    private final Integer code;
+    public BusinessException(int code, String message) {
 
-    public BusinessException(Integer code, String message) {
-
-        super(message);
-        this.code = code;
+        super(code, message);
     }
 
-    public BusinessException(String message) {
+    public BusinessException(HttpStatus status, String message) {
 
-        this(-1, message);
+        this(status.value(), message);
     }
 
-    public Integer getCode() {
+    public HttpStatus getStatus() {
 
-        return code;
+        return HttpStatus.valueOf(getCode());
     }
 }
