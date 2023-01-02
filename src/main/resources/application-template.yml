@@ -17,7 +17,9 @@ forum:
   # Jwt String
   jwt:
     secret: s71uE1N861fVWFi8pjZqHwG15NLOB5vCGq0-Cb4w10tTtY7-WPwXyM_cQaSCdMid
-    expiration-milliseconds: 36000000 # 10 hours
+    access-token-expiration: 36000000 # 10 hours
+    refresh-token-expiration: 864000000 # 10 days
+
   # Id for Snowflake
   snowflake:
     worker-id: 10

@@ -17,8 +17,8 @@ public class PageTransformUtil {
     public static <T, R> PageVO<R> toViewPage(
             PageDTO pageDTO,
             Function<Pageable, Page<T>> function,
-            Function<T, R> mapper
-    ) {
+            Function<T, R> mapper) {
+
         // Page<T> 's pageNumber starts from 0
         int page = pageDTO.getPage() - 1;
         int pageSize = pageDTO.getPageSize();

@@ -27,8 +27,6 @@ public class TopicServiceImpl implements TopicService {
 
     private TopicRepository topicRepository;
 
-    private SnowflakeIdUtil snowflakeIdUtil;
-
     @Autowired
     public void setAccountRepository(AccountRepository accountRepository) {
 
@@ -41,11 +39,6 @@ public class TopicServiceImpl implements TopicService {
         this.topicRepository = topicRepository;
     }
 
-    @Autowired
-    public void setSnowflakeIdUtil(SnowflakeIdUtil snowflakeIdUtil) {
-
-        this.snowflakeIdUtil = snowflakeIdUtil;
-    }
 
     @Override
     public void addTopic(TopicDTO topicDTO, String accountId) {
@@ -53,7 +46,7 @@ public class TopicServiceImpl implements TopicService {
         Account account = accountRepository.findById(UUID.fromString(accountId))
                 .orElseThrow(() -> BusinessException.UserNotFound);
         topicRepository.save(Topic.of(
-                snowflakeIdUtil.nextId(),
+                SnowflakeIdUtil.nextId(),
                 topicDTO.getTitle(),
                 account,
                 topicDTO.getContent(),

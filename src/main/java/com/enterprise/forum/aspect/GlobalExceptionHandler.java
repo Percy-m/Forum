@@ -1,7 +1,9 @@
 package com.enterprise.forum.aspect;
 
+import com.enterprise.forum.exception.JwtAuthException;
 import com.enterprise.forum.vo.CommonVO;
 import jakarta.validation.ValidationException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -23,6 +25,14 @@ public class GlobalExceptionHandler {
     public CommonVO handleValidationException(ValidationException e) {
 
         return CommonVO.error("ValidationException: " + e.getMessage());
+    }
+
+    @ExceptionHandler(JwtAuthException.class)
+    public ResponseEntity<CommonVO> handleJwtAuthException(JwtAuthException e) {
+
+        return new ResponseEntity<>(
+                CommonVO.error(e.getStatus().value(), e.getMessage()),
+                e.getStatus());
     }
 
 //    @ResponseStatus(HttpStatus.BAD_REQUEST)

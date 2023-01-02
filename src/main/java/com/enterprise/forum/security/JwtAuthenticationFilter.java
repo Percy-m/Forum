@@ -1,5 +1,9 @@
 package com.enterprise.forum.security;
 
+import com.enterprise.forum.dto.TokenDTO;
+import com.enterprise.forum.exception.JwtAuthException;
+import com.enterprise.forum.service.RefreshTokenService;
+import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,6 +31,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private UserDetailsService userDetailsService;
 
+    private RefreshTokenService refreshTokenService;
+
     @Autowired
     public void setTokenProvider(JwtTokenProvider tokenProvider) {
 
@@ -39,6 +45,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         this.userDetailsService = userDetailsService;
     }
 
+    @Autowired
+    public void setRefreshTokenService(RefreshTokenService refreshTokenService) {
+
+        this.refreshTokenService = refreshTokenService;
+    }
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
@@ -47,19 +59,41 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String token = getJwtFromRequest(request);
         // validate token
         if (StringUtils.hasText(token) && tokenProvider.validateToken(token)) {
-            // get username from token
-            String username = tokenProvider.getUsernameFromJWT(token);
-            // lead user associated with token
-            UserDetails account = userDetailsService.loadUserByUsername(username);
 
-            UsernamePasswordAuthenticationToken authenticationToken
-                    = new UsernamePasswordAuthenticationToken(
-                            account, null, account.getAuthorities());
-            authenticationToken.setDetails(
-                    new WebAuthenticationDetailsSource()
-                            .buildDetails(request));
-            // set spring security
-            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+            String id = tokenProvider.fromToken(token, Claims::getId);
+
+            // is-refresh-token
+            if (StringUtils.hasText(id)) {
+                try {
+                    if (token.equals(refreshTokenService
+                            .getRefreshTokenById(Long.parseLong(id)))) {
+                        // tokenProvider.requireRefresh(token)
+
+                        TokenDTO tokenDTO = tokenProvider.generateToken(token);
+                        request.setAttribute("token", tokenDTO);
+                    }
+                    else throw JwtAuthException.RefreshTokenNotMatch;
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                }
+            }
+            else {
+                // get username from token
+                String username = tokenProvider.fromToken(token, Claims::getSubject);
+                // lead user associated with token
+                UserDetails account = userDetailsService.loadUserByUsername(username);
+
+                UsernamePasswordAuthenticationToken authenticationToken
+                        = new UsernamePasswordAuthenticationToken(
+                        account, null, account.getAuthorities());
+                authenticationToken.setDetails(
+                        new WebAuthenticationDetailsSource()
+                                .buildDetails(request));
+                // set spring security
+                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+            }
+
+
         }
         filterChain.doFilter(request, response);
     }

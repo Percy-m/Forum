@@ -9,6 +9,12 @@ import org.springframework.http.HttpStatus;
 
 public class JwtAuthException extends ForumException{
 
+    public static JwtAuthException RefreshTokenNotFound
+            = new JwtAuthException(HttpStatus.BAD_REQUEST, "Refresh Token Not Found");
+
+    public static JwtAuthException RefreshTokenNotMatch
+            = new JwtAuthException(HttpStatus.BAD_REQUEST, "Refresh Token Not Match");
+
     private final HttpStatus status;
 
     public JwtAuthException(HttpStatus status, String message) {
