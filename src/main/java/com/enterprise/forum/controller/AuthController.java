@@ -1,10 +1,12 @@
 package com.enterprise.forum.controller;
 
 import com.enterprise.forum.annotation.CurrentAccount;
+import com.enterprise.forum.dto.TokenDTO;
 import com.enterprise.forum.security.JwtTokenProvider;
 import com.enterprise.forum.dto.AccountAuthDTO;
 import com.enterprise.forum.service.AccountService;
 import com.enterprise.forum.vo.CommonVO;
+import jakarta.servlet.ServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -70,8 +72,8 @@ public class AuthController {
                                     currentAccount.getAuthorities()));
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            String token = jwtTokenProvider.generateToken(authentication);
-            return CommonVO.success(token);
+            TokenDTO tokenDTO = jwtTokenProvider.generateToken(authentication);
+            return CommonVO.success(tokenDTO);
         } catch (AuthenticationException e) {
             return CommonVO.error(e.getMessage());
         }
@@ -87,6 +89,12 @@ public class AuthController {
         }
 
         return CommonVO.ok();
+    }
+
+    @GetMapping("/refresh-token")
+    public CommonVO refreshToken(ServletRequest request) {
+
+        return CommonVO.success(request.getAttribute("token"));
     }
 
     // for authentication test

@@ -2,7 +2,6 @@ package com.enterprise.forum.utils;
 
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 
 /**
  * @author Jiayi Zhu
@@ -19,7 +18,6 @@ import org.springframework.stereotype.Component;
  * 加起来刚好64位，为一个Long型。<br>
  * SnowFlake的优点是，整体上按照时间自增排序，并且整个分布式系统内不会产生ID碰撞(由数据中心ID和机器ID作区分)，并且效率较高，经测试，SnowFlake每秒能够产生26万ID左右。
  */
-@Component
 public class SnowflakeIdUtil {
 
     // ==============================Fields===========================================
@@ -67,11 +65,8 @@ public class SnowflakeIdUtil {
     /** 上次生成ID的时间截 */
     private static long lastTimestamp = -1L;
 
-    //==============================Constructors=====================================
-    /**
-     * 构造函数
-     */
-    public SnowflakeIdUtil() {
+    //=============================StaticBlock=======================================
+    static {
         if (workerId > maxWorkerId || workerId < 0) {
             throw new IllegalArgumentException(String.format("worker Id can't be greater than %d or less than 0", maxWorkerId));
         }
@@ -80,12 +75,25 @@ public class SnowflakeIdUtil {
         }
     }
 
+//    //==============================Constructors=====================================
+//    /**
+//     * 构造函数
+//     */
+//    public SnowflakeIdUtil() {
+//        if (workerId > maxWorkerId || workerId < 0) {
+//            throw new IllegalArgumentException(String.format("worker Id can't be greater than %d or less than 0", maxWorkerId));
+//        }
+//        if (datacenterId > maxDatacenterId || datacenterId < 0) {
+//            throw new IllegalArgumentException(String.format("datacenter Id can't be greater than %d or less than 0", maxDatacenterId));
+//        }
+//    }
+
     // ==============================Methods==========================================
     /**
      * 获得下一个ID (该方法是线程安全的)
      * @return SnowflakeId
      */
-    public synchronized long nextId() {
+    public static synchronized long nextId() {
         long timestamp = System.currentTimeMillis();
 
         //如果当前时间小于上一次ID生成的时间戳，说明系统时钟回退过这个时候应当抛出异常
@@ -123,7 +131,7 @@ public class SnowflakeIdUtil {
      * @param lastTimestamp 上次生成ID的时间截
      * @return 当前时间戳
      */
-    protected long tilNextMillis(long lastTimestamp) {
+    protected static long tilNextMillis(long lastTimestamp) {
         long timestamp = System.currentTimeMillis();
         while (timestamp <= lastTimestamp) {
             timestamp = System.currentTimeMillis();
