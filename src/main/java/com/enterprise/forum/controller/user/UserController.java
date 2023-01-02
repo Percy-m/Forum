@@ -36,7 +36,7 @@ public class UserController {
             // need to request login again
         }
         catch (BusinessException e) {
-            return CommonVO.error(e.getMessage());
+            return CommonVO.error(e.getCode(), e.getMessage());
         }
         return CommonVO.ok();
     }

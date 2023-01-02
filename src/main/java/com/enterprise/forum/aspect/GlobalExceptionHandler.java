@@ -18,28 +18,22 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BindException.class)
     public CommonVO handleBindException(BindException e) {
 
-        return CommonVO.error("BindException: " + e.getMessage());
+        return CommonVO.badRequest("BindException: " + e.getMessage());
     }
 
     @ExceptionHandler(ValidationException.class)
     public CommonVO handleValidationException(ValidationException e) {
 
-        return CommonVO.error("ValidationException: " + e.getMessage());
+        return CommonVO.badRequest("ValidationException: " + e.getMessage());
     }
 
     @ExceptionHandler(JwtAuthException.class)
     public ResponseEntity<CommonVO> handleJwtAuthException(JwtAuthException e) {
 
         return new ResponseEntity<>(
-                CommonVO.error(e.getStatus().value(), e.getMessage()),
+                CommonVO.error(e.getStatus(), e.getMessage()),
                 e.getStatus());
     }
 
-//    @ResponseStatus(HttpStatus.BAD_REQUEST)
-//    @ExceptionHandler(Exception.class)
-//    public CommonVO handle() {
-//
-//        return CommonVO.error("401");
-//    }
 
 }

@@ -2,6 +2,7 @@ package com.enterprise.forum.controller;
 
 import com.enterprise.forum.annotation.CurrentAccount;
 import com.enterprise.forum.dto.TokenDTO;
+import com.enterprise.forum.exception.BusinessException;
 import com.enterprise.forum.security.JwtTokenProvider;
 import com.enterprise.forum.dto.AccountAuthDTO;
 import com.enterprise.forum.service.AccountService;
@@ -73,35 +74,35 @@ public class AuthController {
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
             TokenDTO tokenDTO = jwtTokenProvider.generateToken(authentication);
-            return CommonVO.success(tokenDTO);
+            return CommonVO.ok(tokenDTO);
         } catch (AuthenticationException e) {
-            return CommonVO.error(e.getMessage());
+            return CommonVO.unauthorized(e.getMessage());
         }
     }
 
     @PostMapping("/register")
-    public CommonVO registration(@Valid @RequestBody AccountAuthDTO param) {
+    public CommonVO register(@Valid @RequestBody AccountAuthDTO param) {
 
         try {
             accountService.addAccount(param, passwordEncoder::encode);
-        } catch (Exception e) {
-            return CommonVO.error(e.getMessage());
+        } catch (BusinessException e) {
+            return CommonVO.error(e.getCode(), e.getMessage());
         }
 
-        return CommonVO.ok();
+        return CommonVO.created();
     }
 
     @GetMapping("/refresh-token")
     public CommonVO refreshToken(ServletRequest request) {
 
-        return CommonVO.success(request.getAttribute("token"));
+        return CommonVO.ok(request.getAttribute("token"));
     }
 
     // for authentication test
     @GetMapping("/current")
     public CommonVO currentAccount(@CurrentAccount UserDetails account) {
 
-        return CommonVO.success(account);
+        return CommonVO.ok(account);
     }
 
 }
