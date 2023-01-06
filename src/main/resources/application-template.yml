@@ -3,17 +3,18 @@ server:
 
 # Variables defined for the project
 forum:
-  # Role for accounts
-  #  role:
-  #    user: USER
-  #    admin: ADMIN
   # Postgres Connection
   db-conn:
-    host: 127.0.0.1
-    port: 5432
-    database: your-database
-    username: your-username
-    password: your-password
+    pg:
+      host: 127.0.0.1
+      port: 5432
+      database: postgres
+      username: postgres
+      password: postgres
+    redis:
+      host: 127.0.0.1
+      port: 6379
+      password: redis
   # Jwt String
   jwt:
     secret: s71uE1N861fVWFi8pjZqHwG15NLOB5vCGq0-Cb4w10tTtY7-WPwXyM_cQaSCdMid
@@ -26,11 +27,22 @@ forum:
     datacenter-id: 15
 
 spring:
+  data:
+    redis:
+      host: ${forum.db-conn.redis.host}
+      port: ${forum.db-conn.redis.port}
+      password: ${forum.db-conn.redis.password}
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 0
+          max-wait: 100ms
   datasource:
     driver-class-name: org.postgresql.Driver
-    username: ${forum.db-conn.username}
-    password: ${forum.db-conn.password}
-    url: jdbc:postgresql://${forum.db-conn.host}:${forum.db-conn.port}/${forum.db-conn.database}
+    username: ${forum.db-conn.pg.username}
+    password: ${forum.db-conn.pg.password}
+    url: jdbc:postgresql://${forum.db-conn.pg.host}:${forum.db-conn.pg.port}/${forum.db-conn.pg.database}
   #    hikari:
   #      max-lifetime: 60000 # 10 minutes
   sql:

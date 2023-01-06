@@ -55,9 +55,14 @@ public class CommonVO implements Serializable {
      *
      * @return common result view object
      */
+    public static CommonVO created(Object data) {
+
+        return success(HttpStatus.CREATED, "created", data);
+    }
+
     public static CommonVO created() {
 
-        return success(HttpStatus.CREATED, "created", null);
+        return created(null);
     }
 
     public static CommonVO error(HttpStatus status, String message) {

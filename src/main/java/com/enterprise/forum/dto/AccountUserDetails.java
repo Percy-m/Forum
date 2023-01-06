@@ -12,6 +12,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
+import static com.enterprise.forum.constant.RoleConstant.AUTHORITY_ADMIN;
+import static com.enterprise.forum.constant.RoleConstant.AUTHORITY_USER;
+
 /**
  * @author Jiayi Zhu
  * 12/23/2022
@@ -21,11 +24,11 @@ import java.util.List;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class AccountUserDetails implements UserDetails {
 
-    private static final GrantedAuthority ROLE_USER
-            = new SimpleGrantedAuthority("ROLE_USER");
+    private static final GrantedAuthority GRANTED_AUTHORITY_USER
+            = new SimpleGrantedAuthority(AUTHORITY_USER);
 
-    private static final GrantedAuthority ROLE_ADMIN
-            = new SimpleGrantedAuthority("ROLE_ADMIN");
+    private static final GrantedAuthority GRANTED_AUTHORITY_ADMIN
+            = new SimpleGrantedAuthority(AUTHORITY_ADMIN);
 
     private String id;
 
@@ -41,11 +44,11 @@ public class AccountUserDetails implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
 
         if (role == 0) {
-            return List.of(ROLE_USER);
+            return List.of(GRANTED_AUTHORITY_USER);
         }
         return List.of(
-                ROLE_USER,
-                ROLE_ADMIN);
+                GRANTED_AUTHORITY_USER,
+                GRANTED_AUTHORITY_ADMIN);
     }
 
     @Override
