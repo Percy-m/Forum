@@ -41,7 +41,7 @@ public class TopicServiceImpl implements TopicService {
 
 
     @Override
-    public void addTopic(TopicDTO topicDTO, String accountId) {
+    public void addTopic(TopicDTO topicDTO, String accountId) throws BusinessException {
 
         Account account = accountRepository.findById(UUID.fromString(accountId))
                 .orElseThrow(() -> BusinessException.UserNotFound);
@@ -53,8 +53,32 @@ public class TopicServiceImpl implements TopicService {
                 LocalDateTime.now()));
     }
 
+    @Override
     public Page<Topic> getAllTopics(Pageable pageable) {
 
         return topicRepository.getAllBy(pageable);
+    }
+
+
+    private Topic validateTopicOwner(Long topicId, String username) throws BusinessException {
+
+        Topic topic = topicRepository.findById(topicId)
+                .orElseThrow(() -> BusinessException.TopicNotFound);
+
+        if (topic.getAccount().getUsername().equals(username)) {
+            return topic;
+        }
+        throw BusinessException.ActionNotAllowed;
+    }
+
+    @Override
+    public void updateTopic(Long topicId, TopicDTO topicDTO, String username) throws BusinessException {
+
+        Topic topic = validateTopicOwner(topicId, username);
+
+        topic.setTitle(topicDTO.getTitle());
+        topic.setContent(topicDTO.getContent());
+
+        topicRepository.save(topic);
     }
 }

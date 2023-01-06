@@ -18,6 +18,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import static com.enterprise.forum.constant.RoleConstant.ROLE_ADMIN;
+import static com.enterprise.forum.constant.RoleConstant.ROLE_USER;
+
 /**
  * @author Jiayi Zhu
  * 2022/12/17
@@ -72,8 +75,8 @@ public class SecurityConfiguration {
                 .and()
                 .authorizeHttpRequests()
                 .requestMatchers("/api/register", "/api/login").permitAll()
-                .requestMatchers("/api/admin").hasRole("ADMIN")
-                .requestMatchers("/api/user").hasRole("USER")
+                .requestMatchers("/api/admin").hasRole(ROLE_ADMIN)
+                .requestMatchers("/api/user").hasRole(ROLE_USER)
                 .requestMatchers("/api/**").permitAll()
                 .anyRequest()
                 .authenticated()

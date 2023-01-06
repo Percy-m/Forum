@@ -19,6 +19,12 @@ public class BusinessException extends ForumException {
     public static BusinessException TopicNotFound
             = new BusinessException(HttpStatus.NOT_FOUND, "找不到主题帖");
 
+    public static BusinessException PermissionDenied
+            = new BusinessException(HttpStatus.FORBIDDEN, "没有权限，拒绝访问");
+
+
+    public static BusinessException ActionNotAllowed
+            = new BusinessException(HttpStatus.FORBIDDEN, "不允许的操作");
 
     public BusinessException(int code, String message) {
 
