@@ -16,7 +16,7 @@ public class CommonVO implements Serializable {
     @JsonIgnore
     private Boolean success;
 
-    private Integer status;
+    private Integer code;
 
     private String message;
 
@@ -25,7 +25,7 @@ public class CommonVO implements Serializable {
     private CommonVO(boolean success, HttpStatus status, String message, Object data) {
 
         this.success = success;
-        this.status = status.value();
+        this.code = status.value();
         this.message = message;
         this.data = data;
     }

@@ -1,5 +1,6 @@
 package com.enterprise.forum.config;
 
+import com.enterprise.forum.security.ExceptionFilter;
 import com.enterprise.forum.security.JwtAuthenticationEntryPoint;
 import com.enterprise.forum.security.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,8 @@ public class SecurityConfiguration {
 
     private JwtAuthenticationFilter jwtAuthenticationFilter;
 
+    private ExceptionFilter exceptionFilter;
+
     private UserDetailsService userDetailsService;
 
     @Autowired
@@ -46,6 +49,12 @@ public class SecurityConfiguration {
     public void setJwtAuthenticationFilter(JwtAuthenticationFilter jwtAuthenticationFilter) {
 
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+    }
+
+    @Autowired
+    public void setExceptionFilter(ExceptionFilter exceptionFilter) {
+
+        this.exceptionFilter = exceptionFilter;
     }
 
     @Autowired
@@ -82,6 +91,7 @@ public class SecurityConfiguration {
                 .authenticated()
                 .and()
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(exceptionFilter, JwtAuthenticationFilter.class)
                 .build();
     }
 
