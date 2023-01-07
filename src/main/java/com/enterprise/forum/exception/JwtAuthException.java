@@ -16,6 +16,8 @@ public class JwtAuthException extends ForumException{
     public static JwtAuthException RefreshTokenNotMatch
             = new JwtAuthException(HttpStatus.BAD_REQUEST, "Refresh Token Not Match");
 
+    public static JwtAuthException RefreshTokenExpired
+            = new JwtAuthException(HttpStatus.BAD_REQUEST, "Refresh Token is Expired");
 
     public JwtAuthException(int code, String message) {
 

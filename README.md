@@ -6,6 +6,9 @@
 ```
 |—— src/main
     |—— java/com/enterprise/forum
+        |—— annotation 注解配置
+        |—— aspect AOP
+        |—— component 组件类
         |—— config 应用配置
         |—— constant 常量配置
         |—— controller 控制器
@@ -13,10 +16,10 @@
         |—— dto 数据传输对象
         |—— exception 自定义异常类
         |—— repository 数据库访问层
-        |—— security jwt-token验证
         |—— service 服务层
         |—— utils 工具类
         |—— vo 视图对象
+        ForumApplication.java
     |—— resources
         |—— static 静态文件
         |—— templates 模板文件

@@ -1,4 +1,4 @@
 @NonNullApi
-package com.enterprise.forum.security;
+package com.enterprise.forum.component.filter;
 
 import org.springframework.lang.NonNullApi;

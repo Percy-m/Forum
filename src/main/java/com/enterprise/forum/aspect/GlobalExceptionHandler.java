@@ -2,6 +2,7 @@ package com.enterprise.forum.aspect;
 
 import com.enterprise.forum.exception.ForumException;
 import com.enterprise.forum.exception.JwtAuthException;
+import com.enterprise.forum.utils.LogUtils;
 import com.enterprise.forum.vo.CommonVO;
 import jakarta.validation.ValidationException;
 import lombok.extern.slf4j.Slf4j;
@@ -21,12 +22,14 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BindException.class)
     public CommonVO handleBindException(BindException e) {
 
+        LogUtils.logError(log, e);
         return CommonVO.badRequest("BindException: " + e.getMessage());
     }
 
     @ExceptionHandler(ValidationException.class)
     public CommonVO handleValidationException(ValidationException e) {
 
+        LogUtils.logError(log, e);
         return CommonVO.badRequest("ValidationException: " + e.getMessage());
     }
 

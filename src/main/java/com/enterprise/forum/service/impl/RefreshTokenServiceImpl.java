@@ -1,6 +1,6 @@
 package com.enterprise.forum.service.impl;
 
-import com.enterprise.forum.domain.security.RefreshToken;
+import com.enterprise.forum.domain.RefreshToken;
 import com.enterprise.forum.exception.JwtAuthException;
 import com.enterprise.forum.repository.RefreshTokenRepository;
 import com.enterprise.forum.service.RefreshTokenService;

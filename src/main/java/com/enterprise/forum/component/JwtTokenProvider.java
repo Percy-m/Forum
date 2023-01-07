@@ -1,4 +1,4 @@
-package com.enterprise.forum.security;
+package com.enterprise.forum.component;
 
 
 import com.enterprise.forum.dto.TokenDTO;
@@ -58,7 +58,10 @@ public class JwtTokenProvider {
         String username = fromToken(refreshToken, Claims::getSubject);
         String accessToken = generateAccessToken(username);
 
-        return TokenDTO.of(accessToken, refreshToken);
+        String newRefreshToken = requireRefresh(refreshToken) ?
+                generateRefreshToken(username) : refreshToken;
+
+        return TokenDTO.of(accessToken, newRefreshToken);
     }
 
     public String generateAccessToken(String username) {
@@ -112,14 +115,13 @@ public class JwtTokenProvider {
     }
 
     // validate JWT token
-    public boolean validateToken(String token) {
+    public void validateToken(String token) {
 
         try {
             Jwts.parserBuilder()
                     .setSigningKey(getKey())
                     .build()
                     .parseClaimsJws(token);
-            return true;
         }
         catch (SecurityException e){
             throw new JwtAuthException(HttpStatus.BAD_REQUEST, "Invalid JWT signature");
@@ -131,6 +133,18 @@ public class JwtTokenProvider {
             throw new JwtAuthException(HttpStatus.BAD_REQUEST, "Unsupported JWT token");
         } catch (IllegalArgumentException e) {
             throw new JwtAuthException(HttpStatus.BAD_REQUEST, "JWT claims string is empty.");
+        }
+    }
+
+    /**
+     * Check the refresh token is stored in the database
+     */
+    public void checkRefreshToken(String refreshToken) throws JwtAuthException {
+
+        long id = Long.parseLong(fromToken(refreshToken, Claims::getId));
+        String token = refreshTokenService.getRefreshTokenById(id);
+        if (!refreshToken.equals(token)) {
+            throw JwtAuthException.RefreshTokenNotMatch;
         }
     }
 

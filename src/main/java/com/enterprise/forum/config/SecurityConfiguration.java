@@ -1,8 +1,8 @@
 package com.enterprise.forum.config;
 
-import com.enterprise.forum.security.ExceptionFilter;
-import com.enterprise.forum.security.JwtAuthenticationEntryPoint;
-import com.enterprise.forum.security.JwtAuthenticationFilter;
+import com.enterprise.forum.component.filter.ExceptionFilter;
+import com.enterprise.forum.component.JwtAuthenticationEntryPoint;
+import com.enterprise.forum.component.filter.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

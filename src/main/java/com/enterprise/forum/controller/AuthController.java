@@ -3,7 +3,7 @@ package com.enterprise.forum.controller;
 import com.enterprise.forum.annotation.CurrentAccount;
 import com.enterprise.forum.dto.TokenDTO;
 import com.enterprise.forum.exception.BusinessException;
-import com.enterprise.forum.security.JwtTokenProvider;
+import com.enterprise.forum.component.JwtTokenProvider;
 import com.enterprise.forum.dto.AccountAuthDTO;
 import com.enterprise.forum.service.AccountService;
 import com.enterprise.forum.vo.CommonVO;
@@ -18,6 +18,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+
+import static com.enterprise.forum.constant.AttributeConstant.TOKEN;
 
 /**
  * @author Jiayi Zhu
@@ -95,7 +97,7 @@ public class AuthController {
     @GetMapping("/refresh-token")
     public CommonVO refreshToken(ServletRequest request) {
 
-        return CommonVO.ok(request.getAttribute("token"));
+        return CommonVO.ok(request.getAttribute(TOKEN));
     }
 
     // for authentication test

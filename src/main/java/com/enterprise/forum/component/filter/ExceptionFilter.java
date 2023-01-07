@@ -1,7 +1,7 @@
-package com.enterprise.forum.security;
+package com.enterprise.forum.component.filter;
 
 import com.enterprise.forum.exception.ForumException;
-import com.enterprise.forum.utils.LogUtil;
+import com.enterprise.forum.utils.LogUtils;
 import com.enterprise.forum.vo.CommonVO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.*;
@@ -38,7 +38,7 @@ public class ExceptionFilter extends OncePerRequestFilter {
         }
         catch (ForumException e) {
 
-            LogUtil.logError(log, e);
+            LogUtils.logError(log, e);
             String content = mapper.writeValueAsString(CommonVO.error(e.getStatus(), e.getMessage()));
             response.setContentType("application/json");
             response.getWriter().write(content);

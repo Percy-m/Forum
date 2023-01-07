@@ -6,6 +6,7 @@
 DROP TABLE IF EXISTS "account" CASCADE;
 DROP TABLE IF EXISTS "topic" CASCADE;
 DROP TABLE IF EXISTS "post" CASCADE;
+DROP TABLE IF EXISTS "refresh-token" CASCADE;
 
 /*
     "account": 用户
@@ -56,3 +57,13 @@ CREATE TABLE "post" (
     FOREIGN KEY ("topic_id") REFERENCES "topic"("id")
         ON DELETE CASCADE ON UPDATE CASCADE
 );
+
+/*
+    "refresh-token": 刷新令牌
+ */
+ CREATE TABLE "refresh-token" (
+     "id"           BIGINT                      NOT NULL,   -- refresh-token id
+     "token"        CHARACTER VARYING (255)     NOT NULL,   -- token string
+
+     PRIMARY KEY ("id")
+ );

@@ -1,8 +1,7 @@
-package com.enterprise.forum.security;
+package com.enterprise.forum.component.filter;
 
+import com.enterprise.forum.component.JwtTokenProvider;
 import com.enterprise.forum.dto.TokenDTO;
-import com.enterprise.forum.exception.JwtAuthException;
-import com.enterprise.forum.service.RefreshTokenService;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -20,6 +19,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+import static com.enterprise.forum.constant.AttributeConstant.TOKEN;
+
 /**
  * @author Jiayi Zhu
  * 2022/12/19
@@ -30,8 +31,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private JwtTokenProvider tokenProvider;
 
     private UserDetailsService userDetailsService;
-
-    private RefreshTokenService refreshTokenService;
 
     @Autowired
     public void setTokenProvider(JwtTokenProvider tokenProvider) {
@@ -45,12 +44,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         this.userDetailsService = userDetailsService;
     }
 
-    @Autowired
-    public void setRefreshTokenService(RefreshTokenService refreshTokenService) {
-
-        this.refreshTokenService = refreshTokenService;
-    }
-
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
@@ -58,21 +51,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         // get JWT (token) from request
         String token = getJwtFromRequest(request);
         // validate token
-        if (StringUtils.hasText(token) && tokenProvider.validateToken(token)) {
+        if (StringUtils.hasText(token)) {
 
-            String id = tokenProvider.fromToken(token, Claims::getId);
+            tokenProvider.validateToken(token);
 
             // is-refresh-token
-            if (StringUtils.hasText(id)) {
+            if (StringUtils.hasText(tokenProvider.fromToken(token, Claims::getId))) {
                 try {
-                    if (token.equals(refreshTokenService
-                            .getRefreshTokenById(Long.parseLong(id)))) {
-                        // tokenProvider.requireRefresh(token)
-
-                        TokenDTO tokenDTO = tokenProvider.generateToken(token);
-                        request.setAttribute("token", tokenDTO);
-                    }
-                    else throw JwtAuthException.RefreshTokenNotMatch;
+                    tokenProvider.checkRefreshToken(token);
+                    TokenDTO tokenDTO = tokenProvider.generateToken(token);
+                    request.setAttribute(TOKEN, tokenDTO);
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
                 }

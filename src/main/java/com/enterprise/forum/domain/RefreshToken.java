@@ -1,4 +1,4 @@
-package com.enterprise.forum.domain.security;
+package com.enterprise.forum.domain;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

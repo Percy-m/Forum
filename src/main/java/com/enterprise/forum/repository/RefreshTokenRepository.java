@@ -1,6 +1,6 @@
 package com.enterprise.forum.repository;
 
-import com.enterprise.forum.domain.security.RefreshToken;
+import com.enterprise.forum.domain.RefreshToken;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
